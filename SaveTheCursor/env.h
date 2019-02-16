@@ -1,3 +1,4 @@
+#pragma once
 class Environment {
 public:
 	int tl_X, tl_Y, br_X, br_Y;

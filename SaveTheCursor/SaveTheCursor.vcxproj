@@ -120,9 +120,11 @@
   <ItemGroup>
     <ClCompile Include="env.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="monkey.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="env.h" />
+    <ClInclude Include="monkey.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
