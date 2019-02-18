@@ -16,7 +16,7 @@ public:
 	bool gameOver;
 	Game() {
 		gameOver = false;
-		e1 = new Environment(990, 10, 10, 990);
+		e1 = new Environment( 10, 990, 990, 10);
 		monkey = new Monkey(e1);
 	}
 	static void render(void){
@@ -25,7 +25,7 @@ public:
 		
 		//glBegin(GL_LINES);
 		//glVertex2i(900, 150); // Specify line-segment geometry.
-		//glVertex2i(100, 100);moveRight
+		//glVertex2i(100, 100);
 		//glEnd();
 		glFlush(); // Process all OpenGL routines as quickly as possible.}
 	}
@@ -43,7 +43,7 @@ void init(void)
 void FrameChecks(int a) {
 	
 	//monkey->moveRight();
-	glutTimerFunc(100, FrameChecks, 1);
+	glutTimerFunc(10, FrameChecks, 1);
 	// timer is a one shoot must be reset after being called.
 	//By using a timed event, your application should run about the same speed on any machine.
 	glutPostRedisplay();
@@ -58,17 +58,7 @@ int main(int argc, char** argv)
 	glutCreateWindow("SaveTheCursor"); // Create display window.
 	init(); // Execute initialization procedure.
 	glutDisplayFunc(g1->render); // Send graphics to display window.
-	glutTimerFunc(20, FrameChecks, 1); // works like a set timeout recalls functions
+	glutTimerFunc(100, FrameChecks, 1); // works like a set timeout recalls functions
 	glutMainLoop(); // Display everything and wait.
 	return 1;
 }
-/*
-void quickTestLine(void) {
-	glColor3f(0.0, 0.4, 0.2); // Set line segment color to green.
-	glBegin(GL_LINES);
-	glVertex2i(900, 150); // Specify line-segment geometry.
-	glVertex2i(100, 100);
-	glEnd();
-	glFlush(); // Process all OpenGL routines as quickly as possible.}
-}
-*/
