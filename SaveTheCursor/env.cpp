@@ -1,4 +1,4 @@
-#include "./env.h"
+#include "env.h"
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 

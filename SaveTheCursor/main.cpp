@@ -4,34 +4,11 @@
 #include <Windows.h>
 #include <stdio.h>
 // Headers for game Objects
-#include "env.h"
-#include "monkey.h"
+#include "Game.h"
 
-// make all instances of game Objects
-Environment* e1;
-Monkey* monkey;
-
-class Game {
-public:
-	bool gameOver;
-	Game() {
-		gameOver = false;
-		e1 = new Environment( 10, 990, 990, 10);
-		monkey = new Monkey(e1);
-	}
-	static void render(void){
-		e1->render(e1);
-		monkey->render(monkey);
-		
-		//glBegin(GL_LINES);
-		//glVertex2i(900, 150); // Specify line-segment geometry.
-		//glVertex2i(100, 100);
-		//glEnd();
-		glFlush(); // Process all OpenGL routines as quickly as possible.}
-	}
-};
-
-Game *g1 = new Game();
+int x = 0;
+int y = 0;
+Game *g = new Game(&x,&y);
 
 void init(void)
 {
@@ -49,6 +26,11 @@ void FrameChecks(int a) {
 	glutPostRedisplay();
 }
 
+void onMouse( int xp, int yp) {
+	x = xp;
+	y = yp;
+}
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv); // Initialize GLUT.
@@ -57,7 +39,8 @@ int main(int argc, char** argv)
 	glutInitWindowSize(800, 600); // Set display-window width and height.
 	glutCreateWindow("SaveTheCursor"); // Create display window.
 	init(); // Execute initialization procedure.
-	glutDisplayFunc(g1->render); // Send graphics to display window.
+	glutDisplayFunc(g->render); // Send graphics to display window.
+	glutPassiveMotionFunc(onMouse);
 	glutTimerFunc(100, FrameChecks, 1); // works like a set timeout recalls functions
 	glutMainLoop(); // Display everything and wait.
 	return 1;

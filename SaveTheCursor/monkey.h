@@ -1,7 +1,7 @@
 #pragma once
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
-#include "./env.h"
+#include "env.h"
 
 enum Coordinates {
 	X = 0, Y = 1
@@ -31,12 +31,13 @@ public:
 	const GLfloat HEIGHT = 33.54101966;
 	const GLfloat BASEWIDTH = 30;
 	int monkeyDirection = 1;
+	int *mouseX, *mouseY;
 	float monkeySpeed = 1.0;
 	Environment* envRef;
 	SideLocation currentPoistion;
 	GLfloat Coordinate[3][2];
 	int testVarible = 0;
-	Monkey(Environment* env);
+	Monkey(Environment* env, int *x, int *y);
 	static void render(Monkey *self);
 	void monkeyMove();
 	void moveRight();
@@ -45,6 +46,7 @@ public:
 	void moveDown();
 	bool checkBounderies1(Coordinates coord, int limit);
 	bool checkBounderies2(Coordinates coord, int limit);
+	bool decideJump();
 	void updateSpeed();
 	void initAwesomeness();
 };

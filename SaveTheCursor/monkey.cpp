@@ -1,5 +1,5 @@
-#include "./env.h"
-#include "./monkey.h"
+#include "env.h"
+#include "monkey.h"
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include <stdio.h>
@@ -66,9 +66,10 @@ void Stopper(Monkey *m) {
 	}
 }
 
-Monkey::Monkey(Environment *env){
-	// init randomizing speed
+Monkey::Monkey(Environment *env,int *x, int *y){
 	this->envRef = env;
+	this->mouseX = x;
+	this->mouseY = y;
 	GLfloat midpoint = (GLfloat)(env->br_X + env->tl_X) / 2;
 	GLfloat initHieght = env->br_Y;
 	this->Coordinate[0][0] = midpoint - BASEWIDTH/2;
@@ -94,6 +95,7 @@ void Monkey::initAwesomeness() {
 }
 
 void Monkey::render(Monkey *self) {
+	printf(" \n mouse position x : %d y: %d", *self->mouseX, *self->mouseX);
 	//self->testVarible = self->testVarible + 1; y doesnt this work
 	//printf("running iteration %d \n",self->testVarible);
 	if (self->monkeyMadMovement) {
@@ -103,10 +105,14 @@ void Monkey::render(Monkey *self) {
 		// wait for 200 milliseconds
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		// decide whether we want to move towards cursor or not 
-		/* write logic to move to cursor */
+		if (self->decideJump()) {
+			/* write logic to move to cursor */
+		}
 		//if not then 
-		self->monkeyMadMovement = true;
-		self->initAwesomeness();
+		else {
+			self->monkeyMadMovement = true;
+			self->initAwesomeness(); // recreate all threads to do various functions of MONKEY BOT
+		}
 	}
 	glColor3f(0.0, 0.4, 0.2);
 	glBegin(GL_TRIANGLES);
@@ -116,7 +122,11 @@ void Monkey::render(Monkey *self) {
 	glEnd();
 };
 
-
+int failedJumps = 0;
+bool Monkey::decideJump() {
+	int getRandomDirection = (rand() % 2); // 50% it might stop
+	return getRandomDirection == 1 ? true : false;
+}
 
 void Monkey::monkeyMove() {
 	bool moveSide1;
