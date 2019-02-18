@@ -26,10 +26,11 @@ enum Directions
 class Monkey {
 public:
 	const int NO_OF_VERTEX = 3;
-	float monkeySpeed = 1.0;
 	int MAX_MONKEY_SPEED = 10;
 	const GLfloat HEIGHT = 33.54101966;
 	const GLfloat BASEWIDTH = 30;
+	int monkeyDirection = 1;
+	float monkeySpeed = 1.0;
 	Environment* envRef;
 	SideLocation currentPoistion;
 	GLfloat Coordinate[3][2];

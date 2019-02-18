@@ -8,17 +8,40 @@
 #include <chrono>
 
 void setTimeoutToUpdateSpeed(Monkey *m) {
-	/* generate number between 0 and 1500 */
 	while (true) {
-		int num = (rand() % (1500 + 1));
+		/* generate number between 300 and 1500 */
+		int num = (rand() % (1500 - 300 + 1));
 		std::this_thread::sleep_for(std::chrono::milliseconds(num * 10));
 		m->updateSpeed();
 	}
 }
 
+int getOpposite(int i) {
+	return i == 0 ? 1 : 0;
+}
+
+void setTimeoutToUpdateDirection(Monkey *m) {
+	int countSameDirection = 0;
+	while (true) {
+		/* generate number between 500 and 1000 */
+		int num = (rand() % (1000 - 500 + 1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(num * 10));
+		int getRandomDirection = (rand() % 2);
+		// logic to proc reverse direction every 3th time it fails
+		m->monkeyDirection == getRandomDirection ? countSameDirection++ : false; // increase same count
+		if (countSameDirection < 5) {
+			m->monkeyDirection = getRandomDirection;
+		}
+		else {
+			m->monkeyDirection = getOpposite(m->monkeyDirection);
+			countSameDirection = 0;
+		}
+		
+	}
+}
+
 Monkey::Monkey(Environment *env){
 	// init randomizing speed
-
 	this->envRef = env;
 	GLfloat midpoint = (GLfloat)(env->br_X + env->tl_X) / 2;
 	GLfloat initHieght = env->br_Y;
@@ -29,8 +52,12 @@ Monkey::Monkey(Environment *env){
 	this->Coordinate[2][0] = midpoint;
 	this->Coordinate[2][1] = initHieght + HEIGHT;
 	this->currentPoistion = BOTTOM;
+	// creating thread for updating speed Randomly
 	std::thread speedChanger(setTimeoutToUpdateSpeed, this);
 	speedChanger.detach();
+	// creating thread for updating directions Randomly
+	std::thread directionChanger(setTimeoutToUpdateDirection, this);
+	directionChanger.detach();
 }
 
 void Monkey::render(Monkey *self) {
@@ -48,62 +75,126 @@ void Monkey::render(Monkey *self) {
 
 
 void Monkey::monkeyMove() {
+	bool moveSide1;
+	bool moveSide2;
 	switch (this->currentPoistion)
 	{
 	case BOTTOM:
-		if (checkBounderies1(X,this->envRef->br_X)) {
-			this->moveRight();
-		}
-		else {
-			this->Coordinate[0][0] = this->envRef->br_X;
-			this->Coordinate[0][1] = this->envRef->br_Y;
-			this->Coordinate[1][0] = this->envRef->br_X;
-			this->Coordinate[1][1] = this->envRef->br_Y + BASEWIDTH;
-			this->Coordinate[2][0] = this->envRef->br_X - HEIGHT;
-			this->Coordinate[2][1] = this->envRef->br_Y + BASEWIDTH / 2;
-			this->currentPoistion = RSIDE;
+		moveSide1 = checkBounderies1(X, this->envRef->br_X);//Bottom_moveRightSide
+		moveSide2 = checkBounderies2(X, this->envRef->tl_X);//Bottom_moveLeftSide
+ 
+		if (moveSide1 &&moveSide2) {
+			this->monkeyDirection==1?this->moveRight():this->moveLeft();
+		}else {
+			if (!moveSide1) {
+				// bottom right corner going to right side
+				this->Coordinate[0][0] = this->envRef->br_X;
+				this->Coordinate[0][1] = this->envRef->br_Y;
+				this->Coordinate[1][0] = this->envRef->br_X;
+				this->Coordinate[1][1] = this->envRef->br_Y + BASEWIDTH;
+				this->Coordinate[2][0] = this->envRef->br_X - HEIGHT;
+				this->Coordinate[2][1] = this->envRef->br_Y + BASEWIDTH / 2;
+				this->currentPoistion = RSIDE;
+			}
+			else {
+				// bottom left corner going to left side
+				this->Coordinate[0][0] = this->envRef->tl_X;
+				this->Coordinate[0][1] = this->envRef->br_Y;
+				this->Coordinate[1][0] = this->envRef->tl_X;
+				this->Coordinate[1][1] = this->envRef->br_Y + BASEWIDTH;
+				this->Coordinate[2][0] = this->envRef->tl_X + HEIGHT;
+				this->Coordinate[2][1] = this->envRef->br_Y + BASEWIDTH / 2;
+				this->currentPoistion = LSIDE;
+			}
 		}
 		break;
 	case RSIDE:
-		if (checkBounderies1(Y, this->envRef->tl_Y)) {
-			this->moveUp();
+		moveSide1 = checkBounderies1(Y, this->envRef->tl_Y);//RSIDE_moveTopSide
+		moveSide2 = checkBounderies2(Y, this->envRef->br_Y);//RSIDE_moveBottomSide
+		if (moveSide1 &&moveSide2) {
+			this->monkeyDirection == 1 ? this->moveUp() : this->moveDown();
 		}
 		else {
-			this->Coordinate[0][0] = this->envRef->br_X;
-			this->Coordinate[0][1] = this->envRef->tl_Y;
-			this->Coordinate[1][0] = this->envRef->br_X - BASEWIDTH;
-			this->Coordinate[1][1] = this->envRef->tl_Y;
-			this->Coordinate[2][0] = this->envRef->br_X - BASEWIDTH/2;
-			this->Coordinate[2][1] = this->envRef->tl_Y - HEIGHT;
-			this->currentPoistion = TOP;
+			if (!moveSide1) {
+				// top right corner going to TOP side
+				this->Coordinate[0][0] = this->envRef->br_X;
+				this->Coordinate[0][1] = this->envRef->tl_Y;
+				this->Coordinate[1][0] = this->envRef->br_X - BASEWIDTH;
+				this->Coordinate[1][1] = this->envRef->tl_Y;
+				this->Coordinate[2][0] = this->envRef->br_X - BASEWIDTH / 2;
+				this->Coordinate[2][1] = this->envRef->tl_Y - HEIGHT;
+				this->currentPoistion = TOP;
+			}
+			else {
+				// bottom right corner going to Bottom side
+				this->Coordinate[0][0] = this->envRef->br_X;
+				this->Coordinate[0][1] = this->envRef->br_Y;
+				this->Coordinate[1][0] = this->envRef->br_X - BASEWIDTH;
+				this->Coordinate[1][1] = this->envRef->br_Y;
+				this->Coordinate[2][0] = this->envRef->br_X - BASEWIDTH / 2;
+				this->Coordinate[2][1] = this->envRef->br_Y + HEIGHT;
+				this->currentPoistion = BOTTOM;
+			}
 		}
 		break;
 	case TOP:
-		if (checkBounderies2(X, this->envRef->tl_X)) {
-			this->moveLeft();
+		 moveSide2 = checkBounderies1(X, this->envRef->br_X);//TOP_moveLeftSide
+		moveSide1 = checkBounderies2(X, this->envRef->tl_X);//TOP_moveRightSide
+		if (moveSide1 && moveSide2) {
+			//inverted
+			this->monkeyDirection == 1 ?  this->moveLeft() : this->moveRight();
 		}
 		else {
-			this->Coordinate[0][0] = this->envRef->tl_X;
-			this->Coordinate[0][1] = this->envRef->tl_Y;
-			this->Coordinate[1][0] = this->envRef->tl_X;
-			this->Coordinate[1][1] = this->envRef->tl_Y - BASEWIDTH;
-			this->Coordinate[2][0] = this->envRef->tl_X + HEIGHT;
-			this->Coordinate[2][1] = this->envRef->tl_Y - BASEWIDTH/2;
-			this->currentPoistion = LSIDE;
+			if (!moveSide1) {
+				// top left corner going to left side
+				this->Coordinate[0][0] = this->envRef->tl_X;
+				this->Coordinate[0][1] = this->envRef->tl_Y;
+				this->Coordinate[1][0] = this->envRef->tl_X;
+				this->Coordinate[1][1] = this->envRef->tl_Y - BASEWIDTH;
+				this->Coordinate[2][0] = this->envRef->tl_X + HEIGHT;
+				this->Coordinate[2][1] = this->envRef->tl_Y - BASEWIDTH / 2;
+				this->currentPoistion = LSIDE;
+			}
+			else {
+				// top right corner going to right side
+				this->Coordinate[0][0] = this->envRef->br_X;
+				this->Coordinate[0][1] = this->envRef->tl_Y;
+				this->Coordinate[1][0] = this->envRef->br_X;
+				this->Coordinate[1][1] = this->envRef->tl_Y - BASEWIDTH;
+				this->Coordinate[2][0] = this->envRef->br_X - HEIGHT;
+				this->Coordinate[2][1] = this->envRef->tl_Y - BASEWIDTH / 2;
+				this->currentPoistion = RSIDE;
+			}
 		}
 		break;
 	case LSIDE:
-		if (checkBounderies2(Y, this->envRef->br_Y)) {
-			this->moveDown();
+		moveSide2 = checkBounderies1(Y, this->envRef->tl_Y);//LSIDE_moveToBottom
+		moveSide1 = checkBounderies2(Y, this->envRef->br_Y);//LSIDE_moveToTop
+		if (moveSide1 && moveSide2) {
+			// inverted
+			this->monkeyDirection == 1 ? this->moveDown() : this->moveUp();
 		}
 		else {
-			this->Coordinate[0][0] = this->envRef->tl_X;
-			this->Coordinate[0][1] = this->envRef->br_Y;
-			this->Coordinate[1][0] = this->envRef->tl_X + BASEWIDTH;
-			this->Coordinate[1][1] = this->envRef->br_Y;
-			this->Coordinate[2][0] = this->envRef->tl_X + BASEWIDTH/2; 
-			this->Coordinate[2][1] = this->envRef->br_Y + HEIGHT;
-			this->currentPoistion = BOTTOM;
+			if (!moveSide1) {
+				// left bottom corner going to bottom
+				this->Coordinate[0][0] = this->envRef->tl_X;
+				this->Coordinate[0][1] = this->envRef->br_Y;
+				this->Coordinate[1][0] = this->envRef->tl_X + BASEWIDTH;
+				this->Coordinate[1][1] = this->envRef->br_Y;
+				this->Coordinate[2][0] = this->envRef->tl_X + BASEWIDTH / 2;
+				this->Coordinate[2][1] = this->envRef->br_Y + HEIGHT;
+				this->currentPoistion = BOTTOM;
+			}
+			else {
+				// left bottom corner going to bottom
+				this->Coordinate[0][0] = this->envRef->tl_X;
+				this->Coordinate[0][1] = this->envRef->tl_Y;
+				this->Coordinate[1][0] = this->envRef->tl_X + BASEWIDTH;
+				this->Coordinate[1][1] = this->envRef->tl_Y;
+				this->Coordinate[2][0] = this->envRef->tl_X + BASEWIDTH / 2;
+				this->Coordinate[2][1] = this->envRef->tl_Y - HEIGHT;
+				this->currentPoistion = TOP;
+			}
 		}
 		break;
 	default:
