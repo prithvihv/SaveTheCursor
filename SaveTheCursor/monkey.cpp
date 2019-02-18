@@ -8,7 +8,7 @@
 #include <chrono>
 
 void setTimeoutToUpdateSpeed(Monkey *m) {
-	while (true) {
+	while (m->monkeyMadMovement) {
 		/* generate number between 300 and 1500 */
 		int num = (rand() % (1500 - 300 + 1));
 		std::this_thread::sleep_for(std::chrono::milliseconds(num * 10));
@@ -22,7 +22,7 @@ int getOpposite(int i) {
 
 void setTimeoutToUpdateDirection(Monkey *m) {
 	int countSameDirection = 0;
-	while (true) {
+	while (m->monkeyMadMovement) {
 		/* generate number between 500 and 1000 */
 		int num = (rand() % (1000 - 500 + 1));
 		std::this_thread::sleep_for(std::chrono::milliseconds(num * 10));
@@ -36,7 +36,33 @@ void setTimeoutToUpdateDirection(Monkey *m) {
 			m->monkeyDirection = getOpposite(m->monkeyDirection);
 			countSameDirection = 0;
 		}
-		
+	}
+}
+
+void Stopper(Monkey *m) {
+	//decide whether to stop the monkey or not 
+	int minTime = 500;
+	int maxTime = 2000;
+	int countSameDirection = 0;
+	while (m->monkeyMadMovement) {
+		/* generate number between minTime and maxTime */
+		int num = (rand() % (maxTime - minTime + 1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(num));
+		int getRandomDirection = (rand() % 4); // 25% it might stop
+		bool randomBool = getRandomDirection == 1 ? true : false;
+		// logic to proc stopper by alternating minTime and MaxTime
+		randomBool == false ? countSameDirection++ : false; // increase same count
+		if (countSameDirection > 3 && !randomBool && (minTime-100) < (maxTime + 100)) {
+			minTime += 100;
+			maxTime -= 100;
+		}
+		else  if(randomBool){
+			// proc here
+			countSameDirection = 0;
+			minTime = 500;
+			maxTime = 2000;
+			m->monkeyMadMovement = false;
+		}
 	}
 }
 
@@ -52,23 +78,41 @@ Monkey::Monkey(Environment *env){
 	this->Coordinate[2][0] = midpoint;
 	this->Coordinate[2][1] = initHieght + HEIGHT;
 	this->currentPoistion = BOTTOM;
+	this->initAwesomeness();
+}
+
+void Monkey::initAwesomeness() {
 	// creating thread for updating speed Randomly
 	std::thread speedChanger(setTimeoutToUpdateSpeed, this);
 	speedChanger.detach();
 	// creating thread for updating directions Randomly
 	std::thread directionChanger(setTimeoutToUpdateDirection, this);
 	directionChanger.detach();
+	// creating thread for updating directions Randomly
+	std::thread StopperThread(Stopper, this);
+	StopperThread.detach();
 }
 
 void Monkey::render(Monkey *self) {
 	//self->testVarible = self->testVarible + 1; y doesnt this work
-	self->monkeyMove();
 	//printf("running iteration %d \n",self->testVarible);
+	if (self->monkeyMadMovement) {
+		self->monkeyMove();
+	}
+	else {
+		// wait for 200 milliseconds
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		// decide whether we want to move towards cursor or not 
+		/* write logic to move to cursor */
+		//if not then 
+		self->monkeyMadMovement = true;
+		self->initAwesomeness();
+	}
 	glColor3f(0.0, 0.4, 0.2);
 	glBegin(GL_TRIANGLES);
-		glVertex2f(self->Coordinate[0][0], self->Coordinate[0][1]);
-		glVertex2f(self->Coordinate[1][0], self->Coordinate[1][1]);
-		glVertex2f(self->Coordinate[2][0], self->Coordinate[2][1]);
+	glVertex2f(self->Coordinate[0][0], self->Coordinate[0][1]);
+	glVertex2f(self->Coordinate[1][0], self->Coordinate[1][1]);
+	glVertex2f(self->Coordinate[2][0], self->Coordinate[2][1]);
 	glEnd();
 };
 

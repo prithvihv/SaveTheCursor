@@ -25,6 +25,7 @@ enum Directions
 
 class Monkey {
 public:
+	bool monkeyMadMovement = true;
 	const int NO_OF_VERTEX = 3;
 	int MAX_MONKEY_SPEED = 10;
 	const GLfloat HEIGHT = 33.54101966;
@@ -45,4 +46,5 @@ public:
 	bool checkBounderies1(Coordinates coord, int limit);
 	bool checkBounderies2(Coordinates coord, int limit);
 	void updateSpeed();
+	void initAwesomeness();
 };
