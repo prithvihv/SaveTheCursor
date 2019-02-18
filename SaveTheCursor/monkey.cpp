@@ -3,9 +3,22 @@
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include <stdio.h>
+#include <iostream>
+#include <thread>
+#include <chrono>
 
+void setTimeoutToUpdateSpeed(Monkey *m) {
+	/* generate number between 0 and 1500 */
+	while (true) {
+		int num = (rand() % (1500 + 1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(num * 10));
+		m->updateSpeed();
+	}
+}
 
 Monkey::Monkey(Environment *env){
+	// init randomizing speed
+
 	this->envRef = env;
 	GLfloat midpoint = (GLfloat)(env->br_X + env->tl_X) / 2;
 	GLfloat initHieght = env->br_Y;
@@ -16,6 +29,8 @@ Monkey::Monkey(Environment *env){
 	this->Coordinate[2][0] = midpoint;
 	this->Coordinate[2][1] = initHieght + HEIGHT;
 	this->currentPoistion = BOTTOM;
+	std::thread speedChanger(setTimeoutToUpdateSpeed, this);
+	speedChanger.detach();
 }
 
 void Monkey::render(Monkey *self) {
@@ -30,9 +45,7 @@ void Monkey::render(Monkey *self) {
 	glEnd();
 };
 
-void Monkey::monkeyMove(Directions D) {
-	
-}
+
 
 void Monkey::monkeyMove() {
 	switch (this->currentPoistion)
@@ -98,6 +111,7 @@ void Monkey::monkeyMove() {
 	}
 }
 
+// checks upper limit
 bool Monkey::checkBounderies1(Coordinates coord,int limit) {
 	for (int i = 0; i < NO_OF_VERTEX;i++) {
 		if (this->Coordinate[i][coord] > limit) {
@@ -106,6 +120,8 @@ bool Monkey::checkBounderies1(Coordinates coord,int limit) {
 	}
 	return true;
 }
+
+// checks lower limit
 bool Monkey::checkBounderies2(Coordinates coord, int limit) {
 	for (int i = 0; i < NO_OF_VERTEX;i++) {
 		if (this->Coordinate[i][coord] < limit) {
@@ -118,28 +134,30 @@ bool Monkey::checkBounderies2(Coordinates coord, int limit) {
 
 void Monkey::moveRight() {
 	for (int i = 0; i < NO_OF_VERTEX; i++) {
-		this->Coordinate[i][0]++;
+		this->Coordinate[i][0] += monkeySpeed;
 	}
 }
 
 void Monkey::moveLeft() {
 	for (int i = 0; i < NO_OF_VERTEX; i++) {
-		this->Coordinate[i][0]--;
+		this->Coordinate[i][0] -= monkeySpeed;
 	}
 }
 
 void Monkey::moveUp() {
 	for (int i = 0; i < NO_OF_VERTEX; i++) {
-		this->Coordinate[i][1]++;
+		this->Coordinate[i][1] += monkeySpeed;
 	}
 }
 
 void Monkey::moveDown() {
 	for (int i = 0; i < NO_OF_VERTEX; i++) {
-		this->Coordinate[i][1]--;
+		this->Coordinate[i][1] -= monkeySpeed;
 	}
 }
 
-
-
-
+void Monkey::updateSpeed() {
+	/* generate number between 0 and MAX_MONKEY_SPEED */
+	float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / MAX_MONKEY_SPEED));
+	this->monkeySpeed = r2;
+}
