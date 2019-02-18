@@ -20,6 +20,7 @@ Monkey::Monkey(Environment *env){
 
 void Monkey::render(Monkey *self) {
 	self->testVarible++;
+	self->moveRight();
 	printf("running iteration %d \n",self->testVarible);
 	glColor3f(0.0, 0.4, 0.2); // Set line segment color to green.		
 	glBegin(GL_TRIANGLES);
@@ -38,18 +39,39 @@ void Monkey::monkeyMove() {
 	{
 	case BOTTOM:
 		if (checkBounderies(X,990)) {
+			this->moveRight();
 		}
+		else {
+			/*
+			this->Coordinate[0][0] = this->envRef->br_X;
+			this->Coordinate[0][1] = this->envRef->br_Y;
+			this->Coordinate[1][0] = midpoint + BASEWIDTH / 2;
+			this->Coordinate[1][1] = initHieght;
+			this->Coordinate[2][0] = midpoint;
+			this->Coordinate[2][1] = initHieght + HEIGHT;
+			this->currentPoistion = BOTTOM;
+			*/
+		}
+		break;
+	case RSIDE:
+		if (checkBounderies(Y, 990)) {
+			this->moveUp();
+		}
+		else {
 
+		}
 	default:
 		break;
 	}
 }
 
 bool Monkey::checkBounderies(Coordinates coord,int limit) {
-	// completed functions
 	for (int i = 0; i < sizeof(Coordinate);i++) {
+		if (this->Coordinate[i][coord] > limit) {
+			return false;
+		}
 	}
-	return false;
+	return true;
 }
 
 void Monkey::moveRight() {

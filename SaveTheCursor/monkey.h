@@ -11,8 +11,8 @@ enum SideLocation
 {
 	TOP,
 	BOTTOM,
-	LEFT,
-	RIGHT,
+	LSIDE,
+	RSIDE,
 };
 
 enum Directions

@@ -23,10 +23,10 @@ public:
 		e1->render(e1);
 		monkey->render(monkey);
 		
-		glBegin(GL_LINES);
-		glVertex2i(900, 150); // Specify line-segment geometry.
-		glVertex2i(100, 100);
-		glEnd();
+		//glBegin(GL_LINES);
+		//glVertex2i(900, 150); // Specify line-segment geometry.
+		//glVertex2i(100, 100);moveRight
+		//glEnd();
 		glFlush(); // Process all OpenGL routines as quickly as possible.}
 	}
 };
@@ -41,8 +41,9 @@ void init(void)
 }
 
 void FrameChecks(int a) {
-	monkey->render(monkey);
-	glutTimerFunc(20, FrameChecks, 1);
+	
+	//monkey->moveRight();
+	glutTimerFunc(100, FrameChecks, 1);
 	// timer is a one shoot must be reset after being called.
 	//By using a timed event, your application should run about the same speed on any machine.
 	glutPostRedisplay();
@@ -53,7 +54,7 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv); // Initialize GLUT.
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB); // Set display mode.
 	glutInitWindowPosition(50, 100); // Set top-left display-window position.
-	glutInitWindowSize(1000, 1000); // Set display-window width and height.
+	glutInitWindowSize(800, 600); // Set display-window width and height.
 	glutCreateWindow("SaveTheCursor"); // Create display window.
 	init(); // Execute initialization procedure.
 	glutDisplayFunc(g1->render); // Send graphics to display window.
