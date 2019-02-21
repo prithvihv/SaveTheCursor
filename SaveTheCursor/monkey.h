@@ -2,6 +2,8 @@
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include "env.h"
+#include "hitBox.h"
+#include "Point.h"
 
 enum Coordinates {
 	X = 0, Y = 1
@@ -13,6 +15,7 @@ enum SideLocation
 	BOTTOM,
 	LSIDE,
 	RSIDE,
+	FLYING
 };
 
 enum Directions
@@ -28,14 +31,19 @@ public:
 	bool monkeyMadMovement = true;
 	const int NO_OF_VERTEX = 3;
 	int MAX_MONKEY_SPEED = 10;
+	int HITBOX_PADDING = 10;
 	const GLfloat HEIGHT = 33.54101966;
 	const GLfloat BASEWIDTH = 30;
 	int monkeyDirection = 1;
 	int *mouseX, *mouseY;
 	float monkeySpeed = 1.0;
+	float MONKEY_SPEED_JUMP = 10;
+	hitBox* hitB;
 	Environment* envRef;
 	SideLocation currentPoistion;
 	GLfloat Coordinate[3][2];
+	Point MonkeySee;
+	SideLocation MonkeySeePoistion;
 	int testVarible = 0;
 	Monkey(Environment* env, int *x, int *y);
 	static void render(Monkey *self);
@@ -49,4 +57,8 @@ public:
 	bool decideJump();
 	void updateSpeed();
 	void initAwesomeness();
+	void moveDirection(float thethe, int xSign, int ySign);
+	void findBaseMidPoint();
+	bool lineLineIntersection(Point A, Point B, Point C, Point D);
+	SideLocation monkeySeeWhereToLand(SideLocation lastKnowLocation, Point A, Point B);
 };

@@ -10,7 +10,7 @@ Environment::Environment(int xtl, int ytl, int xbr, int ybr) {
 }
 
 void Environment::render(Environment *self) {
-	glColor3f(1.0, 1.0, 1.0); // white BackGround
+	glColor3f(0.6196078431372549, 0.6196078431372549, 0.6196078431372549); // white BackGround
 	glRecti(self->tl_X, self->tl_Y, self->br_X, self->br_Y);
 };
 

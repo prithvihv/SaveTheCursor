@@ -12,9 +12,10 @@ Game *g = new Game(&x,&y);
 
 void init(void)
 {
-	glClearColor(0, 0, 0, 0); // Set display-window color to black.
+	glClearColor(0.1,0 , 0.72, 0.30); // Set display-window color to black.
 	glMatrixMode(GL_PROJECTION); // Set projection parameters.
 	gluOrtho2D(0.0, 1000.0, 0.0, 1000.0);
+	//glRotatef
 }
 
 void FrameChecks(int a) {
