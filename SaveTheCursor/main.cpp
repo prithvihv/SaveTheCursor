@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 	glutCreateWindow("SaveTheCursor"); // Create display window.
 	init(); // Execute initialization procedure.
 	glutDisplayFunc(g->render); // Send graphics to display window.
-	glutPassiveMotionFunc(onMouse);
+	glutPassiveMotionFunc(g->bananaMouse->onMouse);
 	glutTimerFunc(100, FrameChecks, 1); // works like a set timeout recalls functions
 	glutMainLoop(); // Display everything and wait.
 	return 1;

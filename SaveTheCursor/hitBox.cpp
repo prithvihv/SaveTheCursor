@@ -3,9 +3,6 @@
 #include <cmath> 
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
-hitBox::hitBox(int padding) {
-	this->PADDING = padding;
-}
 hitBox::hitBox(float TL_X, float TL_Y, float BR_X, float BR_Y,int padding) {
 	this->PADDING = padding;
 	this->bottomRight.x = BR_X;
@@ -68,11 +65,31 @@ bool hitBox::collisionCheck(float X, float Y) {
 
 // this is for a box
 bool hitBox::collisionCheck(Point TL, Point BR) {
-	//if (this->bottomRight.x >= X && X >= this->topLeft.x) {
-		//if (this->bottomRight.y <= Y && Y <= this->topLeft.y) {
-			//return true;
-		//}
-	//}
+	bool found = false;
+	for (int i = 0;i < 3 ; i++) {
+		found = this->collisionCheck(TL.x, TL.y);
+		found = this->collisionCheck(TL.x, BR.y);
+		found = this->collisionCheck(BR.x, BR.y);
+		found = this->collisionCheck(BR.x, TL.y);
+	}
+	if (found) {
+		return true;
+	}
+	//complete this function
+	return false;
+}
+
+bool hitBox::collisionCheck(hitBox* otherHitBox) {
+	bool found = false;
+	for (int i = 0;i < 3; i++) {
+		found = this->collisionCheck(otherHitBox->topLeft.x, otherHitBox->topLeft.y);
+		found = this->collisionCheck(otherHitBox->topLeft.x, otherHitBox->bottomRight.y);
+		found = this->collisionCheck(otherHitBox->bottomRight.x, otherHitBox->bottomRight.y);
+		found = this->collisionCheck(otherHitBox->bottomRight.x, otherHitBox->topLeft.y);
+	}
+	if (found) {
+		return true;
+	}
 	//complete this function
 	return false;
 }

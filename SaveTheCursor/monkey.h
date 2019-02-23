@@ -2,6 +2,7 @@
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include "env.h"
+#include "banana.h"
 #include "hitBox.h"
 #include "Point.h"
 
@@ -37,15 +38,16 @@ public:
 	int monkeyDirection = 1;
 	int *mouseX, *mouseY;
 	float monkeySpeed = 1.0;
-	float MONKEY_SPEED_JUMP = 10;
+	float MONKEY_SPEED_JUMP = 30;
 	hitBox* hitB;
 	Environment* envRef;
+	banana* bananaRef;
 	SideLocation currentPoistion;
 	GLfloat Coordinate[3][2];
 	Point MonkeySee;
 	SideLocation MonkeySeePoistion;
 	int testVarible = 0;
-	Monkey(Environment* env, int *x, int *y);
+	Monkey(Environment* env, banana* banana);
 	static void render(Monkey *self);
 	void monkeyMove();
 	void moveRight();

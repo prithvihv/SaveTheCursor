@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="banana.cpp" />
     <ClCompile Include="env.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="hitBox.cpp" />
@@ -126,11 +127,15 @@
     <ClCompile Include="Point.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="banana.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="hitBox.h" />
     <ClInclude Include="monkey.h" />
     <ClInclude Include="Point.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

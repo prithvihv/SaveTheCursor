@@ -9,6 +9,7 @@
 #include <math.h>
 #include "hitBox.h"
 #include "Point.h"
+#include "banana.h"
 #include <cmath>  
 
 Point midpoint(0, 0);
@@ -110,10 +111,9 @@ void Stopper(Monkey *m) {
 	}
 }
 
-Monkey::Monkey(Environment *env, int *x, int *y) {
+Monkey::Monkey(Environment *env, banana* bananaRef) {
 	this->envRef = env;
-	this->mouseX = x;
-	this->mouseY = y;
+	this->bananaRef = bananaRef;
 	GLfloat midpoint = (GLfloat)(env->br_X + env->tl_X) / 2;
 	GLfloat initHieght = env->br_Y;
 	this->Coordinate[0][0] = midpoint - BASEWIDTH / 2;
@@ -175,19 +175,27 @@ SideLocation Monkey::monkeySeeWhereToLand(SideLocation lastKnowLocation,Point a,
 	throw "Monkey doesnt see where to land";
 }
 
+float lastx1;
+float lasty1;
+
+int xSign;
+int ySign;
 void Monkey::render(Monkey *self) {
-	printf(" \n mouse position x : %d y: %d", *self->mouseX, *self->mouseX);
 	self->hitB->DebugerRender(self->hitB);
-	//self->testVarible = self->testVarible + 1; y doesnt this work
-	//printf("running iteration %d \n",self->testVarible);
+	// handle this part porperly
+	// this checks if the collision box of the monkey and the banana collide
+	bool gameOver = self->hitB->collisionCheck(self->bananaRef->hitB);
+	if (gameOver) {
+		printf("<+++++++++++++++++++++++++++ GAME OVER +++++++++++++++++++++++++++++++++++++>");
+		throw "Game Over";
+	}
+
+
 	if (self->monkeyMadMovement) {
 		self->monkeyMove();
 	}
 	else if (!self->monkeyMadMovement&& self->currentPoistion == FLYING) {
-		// this block will only executes when below has be configured and set up
 		if (!self->hitB->collisionCheck(self->MonkeySee.x, self->MonkeySee.y)) {
-			int xSign = self->Coordinate[0][X] > self->MonkeySee.x ? -1 : +1;
-			int ySign = self->Coordinate[0][Y] > self->MonkeySee.y ? -1 : +1;
 			self->moveDirection(angleToCursor, xSign, ySign);
 		}
 		else {
@@ -199,23 +207,29 @@ void Monkey::render(Monkey *self) {
 	}
 	else {
 		// wait for 200 milliseconds
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		// this blocks the thread
+		int num = (rand() % (500 - 200 + 1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(num));
 		// decide whether we want to move towards cursor or not 
 		if (self->decideJump()) {
 			/* write logic to move to cursor */
 
 			self->findBaseMidPoint();
-			float x1 = 500;
-			float y1 = 500;
+			float x1 = self->bananaRef->x;
+			float y1 = self->bananaRef->y;
+			lastx1 = x1;
+			lasty1 = y1;
 			float x2 = midpoint.x;
 			float y2 = midpoint.y;
 
-			Point a(500, 500);
+			Point a(x1, y1);
 			Point b(x2, y2);
 
 			self->MonkeySeePoistion = self->monkeySeeWhereToLand(self->currentPoistion, a, b);
 
 			float m = (y2 - y1) / (x2 - x1);
+			 xSign = self->Coordinate[0][X] > self->MonkeySee.x ? -1 : +1;
+			 ySign = self->Coordinate[0][Y] > self->MonkeySee.y ? -1 : +1;
 			angleToCursor = atan(m);
 			/*
 			for (int k = 0; k < self->NO_OF_VERTEX; k++) {
@@ -243,7 +257,7 @@ void Monkey::render(Monkey *self) {
 	glColor3f(1.0, 0.0, 0.0);
 	glBegin(GL_LINES);
 	glVertex2f(midpoint.x, midpoint.y);
-	glVertex2f(500, 500);
+	glVertex2f(lastx1, lasty1);
 	glEnd();
 
 	glColor3f(0.14901960784313725, 0.2549019607843137, 0.5607843137254902);
@@ -253,7 +267,6 @@ void Monkey::render(Monkey *self) {
 	glVertex2f(self->Coordinate[2][0], self->Coordinate[2][1]);
 	glEnd();
 	self->hitB->updateHitBox((*self).Coordinate);
-	
 };
 
 int failedJumps = 0;
