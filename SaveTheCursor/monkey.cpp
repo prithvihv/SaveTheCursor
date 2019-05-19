@@ -1,7 +1,7 @@
 #include "env.h"
 #include "monkey.h"
-#include "Dependencies\glew\glew.h"
-#include "Dependencies\freeglut\freeglut.h"
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 #include <stdio.h>
 #include <iostream>
 #include <thread>
@@ -180,14 +180,14 @@ float lasty1;
 
 int xSign;
 int ySign;
-void Monkey::render(Monkey *self) {
+bool Monkey::render(Monkey *self) {
 	self->hitB->DebugerRender(self->hitB);
 	// handle this part porperly
 	// this checks if the collision box of the monkey and the banana collide
 	bool gameOver = self->hitB->collisionCheck(self->bananaRef->hitB);
 	if (gameOver) {
 		printf("<+++++++++++++++++++++++++++ GAME OVER +++++++++++++++++++++++++++++++++++++>");
-		throw "Game Over";
+		return gameOver;
 	}
 
 
@@ -267,6 +267,7 @@ void Monkey::render(Monkey *self) {
 	glVertex2f(self->Coordinate[2][0], self->Coordinate[2][1]);
 	glEnd();
 	self->hitB->updateHitBox((*self).Coordinate);
+	return gameOver;
 };
 
 int failedJumps = 0;

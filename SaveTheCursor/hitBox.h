@@ -1,6 +1,6 @@
 #pragma once
-#include "Dependencies\glew\glew.h"
-#include "Dependencies\freeglut\freeglut.h"
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 #include "Point.h"
 class hitBox
 {

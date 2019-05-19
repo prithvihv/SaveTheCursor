@@ -1,6 +1,6 @@
 #include "env.h"
-#include "Dependencies\glew\glew.h"
-#include "Dependencies\freeglut\freeglut.h"
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 
 Environment::Environment(int xtl, int ytl, int xbr, int ybr) {
 	this->tl_X = xtl;

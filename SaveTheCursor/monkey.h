@@ -1,6 +1,6 @@
 #pragma once
-#include "Dependencies\glew\glew.h"
-#include "Dependencies\freeglut\freeglut.h"
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 #include "env.h"
 #include "banana.h"
 #include "hitBox.h"
@@ -48,7 +48,7 @@ public:
 	SideLocation MonkeySeePoistion;
 	int testVarible = 0;
 	Monkey(Environment* env, banana* banana);
-	static void render(Monkey *self);
+	static bool render(Monkey *self);
 	void monkeyMove();
 	void moveRight();
 	void moveLeft();
