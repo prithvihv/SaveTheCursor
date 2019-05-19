@@ -17,7 +17,7 @@ Game::Game(int* xpostion, int* yposition)
 }
 void Game::render(void) {
 	self->e1->render(self->e1);
-	self->monkey->render(self->monkey);
+	self->gameOver = self->monkey->render(self->monkey);
 	self->bananaMouse->render(self->bananaMouse);
 	//glBegin(GL_LINES);
 	//glVertex2i(900, 150); // Specify line-segment geometry.
