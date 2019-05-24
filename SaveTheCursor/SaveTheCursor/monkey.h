@@ -29,6 +29,7 @@ enum Directions
 
 class Monkey {
 public:
+	GLfloat color[3] = { 0.14901960784313725, 0.2549019607843137, 0.5607843137254902 };
 	bool monkeyMadMovement = true;
 	const int NO_OF_VERTEX = 3;
 	int MAX_MONKEY_SPEED = 10;

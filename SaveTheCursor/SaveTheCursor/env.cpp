@@ -10,8 +10,11 @@ Environment::Environment(int xtl, int ytl, int xbr, int ybr) {
 }
 
 void Environment::render(Environment *self) {
-	glColor3f(0.6196078431372549, 0.6196078431372549, 0.6196078431372549); // white BackGround
+	glColor3fv(self->color); // white BackGround
 	glRecti(self->tl_X, self->tl_Y, self->br_X, self->br_Y);
+	//int getRandomDirection = (rand() % 2);
+	//self->color[getRandomDirection] = self->color[getRandomDirection] > 1.000 ? self->color[getRandomDirection] - 1 : self->color[getRandomDirection] + 0.8;
+
 };
 
 

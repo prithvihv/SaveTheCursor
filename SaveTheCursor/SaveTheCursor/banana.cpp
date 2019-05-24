@@ -19,6 +19,26 @@ void banana::onMouse(int xp, int yp) {
 void banana::render(banana *self) {
 	self->hitB->updateHitBox(self->x - 20, self->y + 20, self->x + 20, self->y - 20);
 	self->hitB->DebugerRender(self->hitB);
+	glutSetCursor(GLUT_CURSOR_NONE);
+	glColor3f(1, 1, 0);
+	glPushMatrix();
+	glTranslatef(self->x - 72, self->y - 80, 0);
+	glBegin(GL_LINES);    //Specify line segment geometry
+	glVertex2i(55, 80);
+	glVertex2i(90, 80);
+	glVertex2i(60, 60);
+	glVertex2i(70, 100);
+	glVertex2i(55, 80);
+	glVertex2i(90, 60);
+	glVertex2i(70, 100);
+	glVertex2i(90, 60);
+	glVertex2i(60, 60);
+	glVertex2i(90, 80);
+	glEnd();
+	glTranslatef(-self->x, -self->y, 0);
+	glPopMatrix();
+
+
 };
 
 

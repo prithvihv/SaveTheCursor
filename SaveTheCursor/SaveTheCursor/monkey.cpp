@@ -260,7 +260,11 @@ bool Monkey::render(Monkey *self) {
 	glVertex2f(lastx1, lasty1);
 	glEnd();
 
-	glColor3f(0.14901960784313725, 0.2549019607843137, 0.5607843137254902);
+	glColor3fv(self->color);
+	int getRandomDirection = (rand() % 3);
+	self->color[getRandomDirection]= self->color[getRandomDirection] > 1.000 ? self->color[getRandomDirection] - 1 : self->color[getRandomDirection] +0.1;
+
+
 	glBegin(GL_TRIANGLES);
 	glVertex2f(self->Coordinate[0][0], self->Coordinate[0][1]);
 	glVertex2f(self->Coordinate[1][0], self->Coordinate[1][1]);

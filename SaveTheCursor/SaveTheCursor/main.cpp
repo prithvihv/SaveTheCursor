@@ -3,6 +3,8 @@
 #include <iostream>
 #include <Windows.h>
 #include <stdio.h>
+#include <mmsystem.h>
+#include <thread>
 // Headers for game Objects
 #include "Game.h"
 
@@ -12,9 +14,14 @@ Game *g = new Game(&x,&y);
 
 void init(void)
 {
-	glClearColor(0.1,0 , 0.72, 0.30); // Set display-window color to black.
+
+	glClearColor(1, 1, 1, 1); // Set display-window color to black.
 	glMatrixMode(GL_PROJECTION); // Set projection parameters.
+	glLoadIdentity();
 	gluOrtho2D(0.0, 1000.0, 0.0, 1000.0);
+	glMatrixMode(GL_MODELVIEW); // Set projection parameters.
+	glLoadIdentity();
+	//(0.35, 0.329, 0.439, 1)
 	//glRotatef
 }
 
@@ -32,6 +39,13 @@ void onMouse( int xp, int yp) {
 	y = yp;
 }
 
+void playMusic() {
+	while (true) {
+		sndPlaySound("POL.wav", SND_ALIAS);
+		std::this_thread::sleep_for(std::chrono::seconds(12));
+	}
+}
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv); // Initialize GLUT.
@@ -43,6 +57,8 @@ int main(int argc, char** argv)
 	glutDisplayFunc(g->render); // Send graphics to display window.
 	glutPassiveMotionFunc(g->bananaMouse->onMouse);
 	glutTimerFunc(100, FrameChecks, 1); // works like a set timeout recalls functions
+	std::thread speedChanger(playMusic);
+	
 	glutMainLoop(); // Display everything and wait.
 	return 1;
 }
