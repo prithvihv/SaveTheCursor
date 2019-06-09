@@ -19,8 +19,7 @@ void init(void)
 	glMatrixMode(GL_PROJECTION); // Set projection parameters.
 	glLoadIdentity();
 	gluOrtho2D(0.0, 1000.0, 0.0, 1000.0);
-	glMatrixMode(GL_MODELVIEW); // Set projection parameters.
-	glLoadIdentity();
+
 	//(0.35, 0.329, 0.439, 1)
 	//glRotatef
 }
