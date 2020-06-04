@@ -13,7 +13,7 @@ banana::banana()
 void banana::onMouse(int xp, int yp) {
 	self->x = xp * 1000/ 800;
 	self->y = abs(yp-600) * 1000/ 600;
-	printf(" \n mouse position x : %d y: %d", self->x, self->y);
+	printf(" \n REAL DEAL mouse position x : %d y: %d", self->x, self->y);
 }
 
 void banana::render(banana *self) {

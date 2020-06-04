@@ -6,11 +6,11 @@
 // #include <mmsystem.h>
 #include <thread>
 // Headers for game Objects
-#include "Game.h"
+// #include "Game.h"
 
 int x = 0;
 int y = 0;
-Game *g = new Game(&x,&y);
+// Game *g = new Game(&x,&y);
 
 void init(void)
 {
@@ -45,6 +45,15 @@ void onMouse( int xp, int yp) {
 // 	}
 // }
 
+void display(){
+    glBegin(GL_LINES);
+	glVertex2i(900, 150); // Specify line-segment geometry.
+	glVertex2i(100, 100);
+	glEnd();
+	glFlush();
+}
+
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv); // Initialize GLUT.
@@ -53,8 +62,7 @@ int main(int argc, char** argv)
 	glutInitWindowSize(800, 600); // Set display-window width and height.
 	glutCreateWindow("SaveTheCursor"); // Create display window.
 	init(); // Execute initialization procedure.
-	glutDisplayFunc(g->render); // Send graphics to display window.
-	glutPassiveMotionFunc(g->bananaMouse->onMouse);
+	glutDisplayFunc(display); // Send graphics to display window.
 	glutTimerFunc(100, FrameChecks, 1); // works like a set timeout recalls functions
 	// std::thread speedChanger(playMusic);
 	

@@ -1,0 +1,1 @@
+g++ banana.cpp banana.h env.cpp env.h Game.cpp Game.h hitBox.cpp hitBox.h main.cpp monkey.cpp monkey.h mouseHandler.h  mouseHandler.cpp Point.cpp Point.h -o savethecursor -lGL -lGLU -lglut -Wl,--allow-multiple-definition -lpthread
